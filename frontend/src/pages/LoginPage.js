@@ -20,6 +20,7 @@ const LoginPage = () => {
       if (!res.ok) throw new Error(data.message || 'Login failed');
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('userName', data.user.name);
       navigate('/cars');
     } catch (err) {
       setError(err.message);

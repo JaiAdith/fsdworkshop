@@ -9,6 +9,7 @@ const CarsPage = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [bookingMsg, setBookingMsg] = useState('');
+  const [bookingError, setBookingError] = useState('');
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -32,13 +33,33 @@ const CarsPage = () => {
     setSelectedCar(car);
     setShowBooking(true);
     setBookingMsg('');
+    setBookingError('');
     setStartDate('');
     setEndDate('');
+  };
+
+  const validateBooking = () => {
+    if (!startDate || !endDate) return false;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const sDate = new Date(startDate);
+    const eDate = new Date(endDate);
+    if (sDate < today) {
+      setBookingError('Start date cannot be in the past.');
+      return false;
+    }
+    if (eDate < sDate) {
+      setBookingError('End date must be after start date.');
+      return false;
+    }
+    setBookingError('');
+    return true;
   };
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setBookingMsg('');
+    if (!validateBooking()) return;
     try {
       const token = localStorage.getItem('token');
       const res = await fetch('/api/bookings', {
@@ -98,9 +119,10 @@ const CarsPage = () => {
           <form onSubmit={handleBookingSubmit}>
             <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required />
             <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required />
-            <button type="submit">Confirm Booking</button>
+            <button type="submit" disabled={!validateBooking()}>Confirm Booking</button>
             <button type="button" onClick={() => setShowBooking(false)} style={{ marginLeft: 8 }}>Cancel</button>
           </form>
+          {bookingError && <p style={{ color: 'red' }}>{bookingError}</p>}
           {bookingMsg && <p>{bookingMsg}</p>}
         </div>
       )}

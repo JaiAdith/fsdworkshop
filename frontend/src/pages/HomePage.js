@@ -10,6 +10,7 @@ const HomePage = () => (
       <Link to="/cars" style={{ margin: 8 }}>Cars</Link>
       <Link to="/bookings" style={{ margin: 8 }}>Bookings</Link>
       <Link to="/admin" style={{ margin: 8 }}>Admin</Link>
+      <Link to="/profile" style={{ margin: 8 }}>Profile</Link>
     </nav>
     <p>Welcome to the Car Rental System. Please login or register to continue.</p>
   </div>
